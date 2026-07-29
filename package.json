@@ -1,0 +1,7 @@
+{
+  "devDependencies": {
+    "antora": "3.1.15",
+    "antora-tracer": "^0.9.2",
+    "asciidoctor-kroki": "^0.18.1"
+  }
+}
