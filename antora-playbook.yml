@@ -2,11 +2,13 @@ site:
   title: Antora Tracer — Self-Traceability Example
   url: https://antora-tracer.conemso.de/docs
   start_page: tracer::index.adoc
+  keys:
+    annotatejs: opt-out
 
 content:
   sources:
     - url: https://github.com/rattermeyer/antora-tracer
-      start_path: examples
+      start_path: examples/component-one
       branches: HEAD
 
 asciidoc:
@@ -17,16 +19,21 @@ antora:
   extensions:
     - #require: ./lib/src/antora-extension.js
       require: antora-tracer/antora-extension
-      preset: self-traceability
+      preset: requirements-engineering
       configPath: ./docs/traceability.yml
       outputDir: traceability
       generateMatrices: true
       matrixFormats: [html, csv]
       includeInNavigation: true
+    - require: '@antora/lunr-extension'
+      index_by_heading: true
 
+#ui:
+#  bundle:
+#    url: https://github.com/rattermeyer/antora-ui-conemso/releases/download/v1.1.1/ui-bundle.zip
 ui:
   bundle:
-    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    url: /home/richard/devel/git/antora-ui-conemso/build/ui-bundle.zip
     snapshot: true
 
 urls:
