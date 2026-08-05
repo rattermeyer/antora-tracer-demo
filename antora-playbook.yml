@@ -28,13 +28,9 @@ antora:
     - require: '@antora/lunr-extension'
       index_by_heading: true
 
-#ui:
-#  bundle:
-#    url: https://github.com/rattermeyer/antora-ui-conemso/releases/download/v1.1.1/ui-bundle.zip
 ui:
   bundle:
-    url: /home/richard/devel/git/antora-ui-conemso/build/ui-bundle.zip
-    snapshot: true
+    url: https://github.com/rattermeyer/antora-ui-conemso/releases/download/v1.1.2/ui-bundle.zip
 
 urls:
   latest_version_segment: latest

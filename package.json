@@ -2,7 +2,11 @@
   "devDependencies": {
     "antora": "3.1.15",
     "antora-tracer": "^0.12.0",
-    "asciidoctor-kroki": "^0.18.1"
+    "asciidoctor-kroki": "^0.18.1",
+    "patch-package": "^8.0.1"
+  },
+  "scripts": {
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@antora/lunr-extension": "^1.0.0-alpha.13"

@@ -1,0 +1,41 @@
+diff --git a/node_modules/@antora/lunr-extension/lib/generate-index.js b/node_modules/@antora/lunr-extension/lib/generate-index.js
+index c55ed12..dacf1d1 100644
+--- a/node_modules/@antora/lunr-extension/lib/generate-index.js
++++ b/node_modules/@antora/lunr-extension/lib/generate-index.js
+@@ -263,6 +263,36 @@ function extractIndexContent (page, dom, indexByHeading) {
+
+     processNodes(contextNodes)
+     titles.push(...sections)
++
++    // Index non-heading elements with id attributes as navigable anchors
++    // (e.g., <div id="REQ-002"> from AsciiDoc [#REQ-002] anchors)
++    function collectAnchoredItems (nodes) {
++      const items = []
++      for (const node of nodes) {
++        if (isTagNamed(HEADING_TAG_NAMES, node)) continue
++        if (node.attribs?.id) {
++          const titleEl = find(
++            (it) => isTag(it) && hasClass('title', it),
++            node.children || [],
++            true,
++            1
++          )[0]
++          items.push({
++            title: titleEl
++              ? innerText(titleEl.children).replace(/\s+/g, ' ').trim()
++              : node.attribs.id,
++            text: innerText([node]).replace(/\s+/g, ' ').trim(),
++            hash: node.attribs.id,
++            id: idCounter++,
++          })
++        }
++        if (node.children?.length) {
++          items.push(...collectAnchoredItems(node.children))
++        }
++      }
++      return items
++    }
++    titles.push(...collectAnchoredItems(contextNodes))
+   } else {
+     find(
+       (it) => {

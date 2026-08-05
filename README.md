@@ -10,8 +10,10 @@ A demo project showcasing [antora-tracer](https://github.com/rattermeyer/antora-
 
 ## Quick Start
 
+> **Note:** A `postinstall` script applies a patch to `@antora/lunr-extension` so that traceability items (e.g. `REQ-001`) appear as individual search results linking directly to their anchors. This ensures the search UI navigates to the item rather than its parent section heading.
+
 ```bash
-# 1. Install dependencies
+# 1. Install dependencies (also applies the lunr patch via postinstall)
 npm install
 
 # 2. Build the Antora documentation site
