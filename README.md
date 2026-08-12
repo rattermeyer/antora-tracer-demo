@@ -7,6 +7,7 @@ A demo project showcasing [antora-tracer](https://github.com/rattermeyer/antora-
 - **Node.js 18+** (with `npx`)
 - **Docker** and Docker Compose (for Neo4j)
 - **curl** (for health checks)
+- **devbox** (optional, for PDF/DOCX output — provides Ruby + pandoc)
 
 ## Quick Start
 
@@ -23,24 +24,33 @@ npx antora antora-playbook.yml
 npx serve public/docs
 # Or: python3 -m http.server 8080 -d public/docs
 
-# 4. (In another terminal) Start Neo4j and import traceability data
+# 4. (Optional) Build PDF + DOCX exports
+devbox run -- npx antora --clean --cache-dir .cache antora-playbook-pdf.yml
+
+# 5. (In another terminal) Start Neo4j and import traceability data
 ./neo4j/run.sh up
 ```
 
 ## Project Structure
 
 ```
-├── antora-playbook.yml   # Antora build configuration
-├── compose.yml           # Neo4j Docker Compose service
-├── package.json          # Node dependencies (antora, antora-tracer, kroki)
+├── antora-playbook.yml          # Antora build configuration (HTML site)
+├── antora-playbook-pdf.yml      # Antora build with PDF + DOCX exports
+├── antora-assembler-pdf.yml     # PDF assembler config
+├── antora-assembler-docx.yml    # DOCX assembler config
+├── adoc-to-docx                 # AsciiDoc → DOCX conversion script (docbook + pandoc)
+├── compose.yml                  # Neo4j Docker Compose service
+├── devbox.json                  # devbox config (Ruby, pandoc, librsvg)
+├── Gemfile                      # Ruby deps (asciidoctor-pdf, asciidoctor-kroki)
+├── package.json                 # Node dependencies (antora, antora-tracer, kroki)
 ├── neo4j/
-│   ├── run.sh            # Neo4j control script (up/down/import/shell/logs)
-│   ├── import.cypher     # Cypher script to load CSVs into Neo4j
-│   └── queries.cypher    # Example Cypher queries for analysis
-└── public/docs/          # Generated site output (gitignored)
+│   ├── run.sh                   # Neo4j control script (up/down/import/shell/logs)
+│   ├── import.cypher            # Cypher script to load CSVs into Neo4j
+│   └── queries.cypher           # Example Cypher queries for analysis
+└── public/docs/                 # Generated site output (gitignored)
     └── tracer/latest/_attachments/traceability/
-        ├── nodes.csv           # Exported nodes for Neo4j import
-        └── relationships.csv   # Exported relationships for Neo4j import
+        ├── nodes.csv            # Exported nodes for Neo4j import
+        └── relationships.csv    # Exported relationships for Neo4j import
 ```
 
 ## Building the Documentation
@@ -55,6 +65,40 @@ The traceability CSV exports (`nodes.csv`, `relationships.csv`) are written to:
 ```
 public/docs/tracer/latest/_attachments/traceability/
 ```
+
+## PDF + DOCX Output
+
+PDF and DOCX exports require Ruby (for `asciidoctor-pdf`) and pandoc (for DOCX conversion).
+The easiest way is via [devbox](https://www.jetify.com/devbox):
+
+```bash
+# Enter devbox shell (installs Ruby, pandoc, librsvg)
+devbox shell
+
+# Install Ruby gems (first time only)
+bundle install
+
+# Build HTML site with PDF + DOCX exports
+npx antora --clean --cache-dir .cache antora-playbook-pdf.yml
+```
+
+Output lands in `build/pdf-output/tracer/0.13/_exports/` — one PDF and one DOCX per navigation section (overview, explanation, how-to-guides, reference, self-traceability, traceability, tutorial).
+
+The playbook uses antora-tracer's published extensions via package subpath exports:
+
+```yaml
+antora:
+  extensions:
+    - require: antora-tracer/antora-pdf
+      config_files:
+        - antora-assembler-pdf.yml
+    - require: antora-tracer/antora-docx
+      config_files:
+        - antora-assembler-docx.yml
+```
+
+> **Note:** Requires `@antora/assembler` and `@antora/pdf-extension` at `1.0.0-beta.20`.
+> The `rc.8` release requires Antora 3.2+ and does not work with Antora 3.1.
 
 ## Browsing the Generated Site
 
@@ -154,4 +198,4 @@ The Antora Tracer extension:
 4. Generates HTML traceability matrices with coverage calculations and clickable links
 5. Exports the graph as `nodes.csv` / `relationships.csv` for Neo4j
 
-The current demo uses the `self-traceability` preset, where the antora-tracer project traces itself — its own requirements, designs, and tests.
+The current demo uses the `requirements-engineering` preset, where the antora-tracer project traces itself — its own requirements, designs, and tests.
