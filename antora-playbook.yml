@@ -27,6 +27,7 @@ antora:
       generateMatrices: true
       matrixFormats: [html, csv]
       includeInNavigation: true
+      krokiServerUrl: http://localhost:8000
     - require: '@antora/lunr-extension'
       index_by_heading: true
 
