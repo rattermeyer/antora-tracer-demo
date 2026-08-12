@@ -1,7 +1,7 @@
 {
   "devDependencies": {
     "antora": "3.1.15",
-    "antora-tracer": "^0.15.0",
+    "antora-tracer": "^0.15.1",
     "asciidoctor-kroki": "^0.18.1",
     "patch-package": "^8.0.1"
   },
