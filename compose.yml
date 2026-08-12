@@ -19,7 +19,19 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
-
+  mermaid:
+    image: yuzutech/kroki-mermaid:0.32.0@sha256:866257fc2aff924533b19f68787ea4a43ad8ac99937e8079d07a2e9551d413fa
+    expose:
+      - "8002"
+  kroki:
+    image: yuzutech/kroki:0.32.0@sha256:877f41306141ea2ceaf6cfb0a4d9d5b4afaf6d147413963712fc7f5544799c6c
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mermaid
+    environment:
+      - KROKI_MERMAID_HOST=mermaid
+      - KROKI_SAFE_MODE=UNSAFE
 volumes:
   neo4j-data:
   neo4j-logs:
