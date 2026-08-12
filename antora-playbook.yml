@@ -12,6 +12,8 @@ content:
       branches: HEAD
 
 asciidoc:
+  attributes:
+    kroki-server-url: http://localhost:8000
   extensions:
     - asciidoctor-kroki
 
