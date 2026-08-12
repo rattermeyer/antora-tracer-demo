@@ -1,0 +1,14 @@
+build:
+  command: ./adoc-to-docx
+  dir: ./build/assembler-docx
+  publish: true
+  keepSource: true
+assembly:
+  root_level: 1
+  sectionMergeStrategy: fuse
+  doctype: book
+  attributes:
+    sectnums: ""
+    xrefstyle: full
+    outlinelevels: '2'
+    toclevels: '3'

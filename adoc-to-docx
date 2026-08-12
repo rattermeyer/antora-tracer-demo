@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# adoc-to-docx — Convert assembled AsciiDoc to DOCX via docbook + pandoc
+#
+# Called by @antora/assembler with:
+#   adoc-to-docx [extra opts] -o OUTPUT -
+# Assembled AsciiDoc arrives on stdin.
+#
+# Prerequisites:
+#   - Ruby (asciidoctor + asciidoctor-kroki gems, via bundler)
+#   - pandoc
+
+set -euo pipefail
+
+OUTPUT=""
+
+# Parse -o flag; ignore all other arguments
+while [ $# -gt 0 ]; do
+  if [ "$1" = "-o" ]; then
+    OUTPUT="$2"
+    shift 2
+  else
+    shift
+  fi
+done
+
+if [ -z "$OUTPUT" ]; then
+  echo "Error: no -o <output> specified" >&2
+  exit 1
+fi
+
+# AsciiDoc → DocBook (via asciidoctor with Kroki support), then → DOCX (via pandoc)
+bundle exec asciidoctor \
+  -b docbook \
+  -r asciidoctor-kroki \
+  -a allow-uri-read \
+  -a kroki-default-format=png \
+  -o - \
+  - | \
+pandoc -f docbook -t docx -o "$OUTPUT" -

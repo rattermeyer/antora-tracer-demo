@@ -8,7 +8,7 @@ site:
 content:
   sources:
     - url: https://github.com/rattermeyer/antora-tracer
-      start_path: examples/component-one
+      start_path: examples/tracer
       branches: HEAD
 
 asciidoc:

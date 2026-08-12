@@ -1,0 +1,41 @@
+site:
+  title: Antora Tracer — Self-Traceability Example (PDF)
+  url: https://antora-tracer.conemso.de/docs
+  start_page: tracer::index.adoc
+
+content:
+  sources:
+    - url: https://github.com/rattermeyer/antora-tracer
+      start_path: examples/tracer
+      branches: HEAD
+
+asciidoc:
+  attributes:
+    pdf-theme: default
+    kroki-default-format: png
+  extensions:
+    - asciidoctor-kroki
+
+antora:
+  extensions:
+    - require: antora-tracer/antora-extension
+      preset: requirements-engineering
+      configPath: ./docs/traceability.yml
+      outputDir: traceability
+      generateMatrices: true
+      matrixFormats: [html, csv]
+      includeInNavigation: true
+    - require: antora-tracer/antora-pdf
+      config_files:
+        - antora-assembler-pdf.yml
+    - require: antora-tracer/antora-docx
+      config_files:
+        - antora-assembler-docx.yml
+
+output:
+  dir: ./build/pdf-output
+  clean: true
+
+ui:
+  bundle:
+    url: https://github.com/rattermeyer/antora-ui-conemso/releases/download/v1.1.2/ui-bundle.zip
